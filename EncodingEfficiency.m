@@ -45,10 +45,15 @@ if M1
     % for tripolar (M1 = 0 MEG), eric 20210208, taken from Dittman et al.
     % 2018, In Vivo Multifrequency wMRE of the Human Brain and Liver, Eqn 5
     q = T*f; % encoding fraction (MEG period * transducer frequency)
-    sinfacs = sin(pi*q) - 2*sin(3/2*pi*q) + sin(2*pi*q);
-    enceff = gamma * G * (1/f) * (1/pi) * sinfacs;
+%     sinfacs = sin(pi*q) - 2*sin(3/2*pi*q) + sin(2*pi*q);
+%     enceff = gamma * G * (1/f) * (1/pi) * sinfacs;
+    
+    % using the calculation from Guenther et al.
+    beta = f*dt;
+    sinfacs = cos(2*pi*beta) + sin(3/2*pi*beta) + sin(5/2*pi*beta);
+    enceff = (gamma*abs(sinfacs))/(2*pi^2*f*beta) * G;
 else
-    % for bipoler (M0 = 0 MEG)
+    % for bipolar (M0 = 0 MEG)
     sinfacs = sin(T*omega/4) .* sin(dt*omega/2) .* sin(dt*omega/2-T*omega/4);
     enceff = 8*1i * G./(dt .* omega.^2) .* gamma .* exp(1i*(T.*omega)/2)*sinfacs;
 end
