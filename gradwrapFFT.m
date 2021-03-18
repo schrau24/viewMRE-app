@@ -1,4 +1,4 @@
-function waveField = gradwrapFFT(smoothedPhase, inplaneResolution, parameters)
+function [waveField, secondHarm] = gradwrapFFT(smoothedPhase, inplaneResolution, parameters)
 
 % get the dimensions
 n1 = size(smoothedPhase,1);% number of rows
@@ -33,10 +33,12 @@ for iFrequency = 1 : nFrequency
         % fourier transformation and selection of harmonic
         fourier1 = fft(gradient1,[],4);
         waveField(:,:,:,1,iComponent,iFrequency) = fourier1(:,:,:,1+parameters.numberOfHarmonics);
+        secondHarm(:,:,:,1,iComponent,iFrequency) = fourier1(:,:,:,2+parameters.numberOfHarmonics);
         fourier2 = fft(gradient2,[],4);
         waveField(:,:,:,2,iComponent,iFrequency) = fourier2(:,:,:,1+parameters.numberOfHarmonics);
-        
+        secondHarm(:,:,:,2,iComponent,iFrequency) = fourier2(:,:,:,2+parameters.numberOfHarmonics);
     end
 end
+
 
 end
